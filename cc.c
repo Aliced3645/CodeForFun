@@ -3,10 +3,10 @@
  *
  *       Filename:  cc.c
  *
- *    Description:  This is a C~~~
+ *    Description:  This is a c.c
  *
  *        Version:  1.0
- *        Created:  09/24/2012 11:20:42 PM
+ *        Created:  09/25/2012 12:58:28 AM
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -16,15 +16,4 @@
  * =====================================================================================
  */
 
-
-/* 
- * ===  FUNCTION  ======================================================================
- *         Name:  MyCFunction
- *  Description:  
- * =====================================================================================
- */
-	void
-MyCFunction ( <+argument_list+> )
-{
-		return <+return_value+>;
-}		/* -----  end of function MyCFunction  ----- */
+/* Comeon */
