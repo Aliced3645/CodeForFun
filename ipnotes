@@ -1,0 +1,36 @@
+
+Link layer: UDP socket.
+
+RIP - Handles the packet routing
+
+'node' executable : n nodes to set up a virtual network - route packets within
+itself, topology passed by config files
+
+write a topology fila and net2lnx will split it into files for each node.
+
+General Parts: Forwarding + Routing
+
+Forwarding: Decapsulate the link layer packet header. (What's the link layer
+        header????, Since I am doing on the Network Layer, so that it cannot
+        see the header of Link Layer, it only deals with headers of the IP
+        Layer because equal layers deal with their headers, which is their
+        responsibility).
+
+
+
+RIP and upper layer: If the router is not the destination or is not in the
+                    subnet of the destination, it will call RIP. If the router
+                    is in the destination, so it will pass the packet to the
+                    upper layer (TCP), which is the next project's work. So in
+                    this project, just print the packet arriving the
+                    destination out. In order to work with upper layer, we
+                    should writer an interface which allows an upper layer to
+                    register a handler for a given protocol number.
+
+
+RIP: the routing part. The RIP has defined a data structure for routers to
+    communicate to each other so that they can learn the up-to-date network
+    topology.
+
+
+Why in the .lnx file, each not has multiple virtual ip address?
