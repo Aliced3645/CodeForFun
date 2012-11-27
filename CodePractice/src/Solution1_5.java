@@ -81,7 +81,6 @@ public class Solution1_5 {
 		String result = Solution1_5.comptressString_2(b);
 		System.out.println(result);
 		
-
 	}
 
 }
