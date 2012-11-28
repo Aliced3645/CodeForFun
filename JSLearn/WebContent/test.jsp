@@ -93,6 +93,7 @@ div.bar{
 	var p;
 	var count = 0;
 	var addedChart = 0;
+	var key = 0;
 	
 	function todo(){
 		var strongElem = document.getElementsByTagName("strong");
@@ -206,11 +207,7 @@ div.bar{
 
 <body>
 
-
-<script type = "text/javascript">
-	var key = 0;
-function showFrequenciesFunc(){
-	
+<% int j = 0; %>
 	<%
 		String tuple;
 		String filePath = application.getRealPath("/") + "FreqLow";
@@ -224,15 +221,24 @@ function showFrequenciesFunc(){
 			k = Integer.parseInt(tuples[0]);
 			v = Integer.parseInt(tuples[1]);
 			frequencies[k] = v;
+			//System.out.println(Integer.toString(k) + " " + Integer.toString(v));
 		}
 	%>
 	
+<script type = "text/javascript">
+
+<%-- assign JSP array to javascript array once for ever! --%>
+var pairs = new Array();
+<%for(int i = 0; i < 10000; i ++){%>
+	pairs[key] = <%=frequencies[i]%>
 	key = key + 1;
-	
-	d3.select("body").append("p").transition().text("New Paragraph!");
-	
-	
-}
+<%}%>
+
+key = 0;
+function showFrequenciesFunc(){
+	d3.select("body").append("p").transition().text(pairs[key]);
+	key ++;
+}	
 
 </script>
 
