@@ -1,4 +1,25 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="java.sql.*"%>
+<%@page import="java.io.BufferedReader"%>
+<%@page import="java.io.BufferedWriter"%>
+<%@page import="java.io.DataInputStream"%>
+<%@page import="java.io.File"%>
+<%@page import="java.io.FileInputStream"%>
+<%@page import="java.io.FileNotFoundException"%>
+<%@page import="java.io.FileWriter"%>
+<%@page import="java.io.IOException"%>
+<%@page import="java.io.InputStreamReader"%>
+<%@page import="java.io.RandomAccessFile"%>
+<%@page import="java.io.BufferedReader"%>
+<%@page import="java.io.*"%>
+<%@page import="java.util.*"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.Map.Entry"%>
+<%@page import="java.util.TreeMap"%>
+
+
 <html>
 <head>
 <title>Hey man</title>
@@ -100,7 +121,6 @@ div.bar{
 				var barWidth = parseFloat(d3.select(this).style("width")) * d ;
 		    	return barWidth + "px"
 			});
-		
 			
 			count ++;
 		}
@@ -187,13 +207,42 @@ div.bar{
 <body>
 
 
+<script type = "text/javascript">
+	var key = 0;
+function showFrequenciesFunc(){
+	
+	<%
+		String tuple;
+		String filePath = application.getRealPath("/") + "FreqLow";
+	  	BufferedReader br = new BufferedReader(new FileReader(filePath));
+		int[] frequencies = new int[10000];
+		Integer k = 0;
+		Integer v = 0;
+		//get the hashmap...
+		while((tuple = br.readLine() ) != null){
+			String[] tuples = tuple.split(" ");
+			k = Integer.parseInt(tuples[0]);
+			v = Integer.parseInt(tuples[1]);
+			frequencies[k] = v;
+		}
+	%>
+	
+	key = key + 1;
+	
+	d3.select("body").append("p").transition().text("New Paragraph!");
+	
+	
+}
+
+</script>
+
 <strong> I am very weak.</strong>
 
 <p><button type="button" onclick="addBar()">addBar</button></p>
 <p><button type="button" onclick="resizeFunc()">ResizeBar</button></p>
 <!-- <button type="button" onclick="dataBindFunc()">dataBindFunc</button> -->
 <p><button type="button" onclick="transitionFunc()">transision</button></p>
-
+<p><button type="button" onclick="showFrequenciesFunc()">showFrequencies</button></p>
 
 <!-- SVG testing -->
 <svg width="500" height="100">
