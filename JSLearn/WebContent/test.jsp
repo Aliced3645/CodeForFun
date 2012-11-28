@@ -205,48 +205,68 @@ div.bar {
 
 	<%
 		String tuple;
-		String filePath = application.getRealPath("/") + "FreqLow";
-		BufferedReader br = new BufferedReader(new FileReader(filePath));
-		int[] frequencies = new int[10000];
 		Integer k = 0;
 		Integer v = 0;
+		//low	
+		String filePathL = application.getRealPath("FreqLow");
+		BufferedReader brL = new BufferedReader(new FileReader(filePathL));
+		int[] frequenciesLow = new int[10000];
+		
 		//get the hashmap...
-		while ((tuple = br.readLine()) != null) {
+		while ((tuple = brL.readLine()) != null) {
 			String[] tuples = tuple.split(" ");
 			k = Integer.parseInt(tuples[0]);
 			v = Integer.parseInt(tuples[1]);
-			frequencies[k] = v;
+			frequenciesLow[k] = v;
+		}
+		
+		//mid
+		String filePathM = application.getRealPath("FreqMid");
+		BufferedReader brM = new BufferedReader(new FileReader(filePathM));
+		int[] frequenciesMid = new int[10000];
+		//get the hashmap...
+		while ((tuple = brM.readLine()) != null) {
+			String[] tuples = tuple.split(" ");
+			k = Integer.parseInt(tuples[0]);
+			v = Integer.parseInt(tuples[1]);
+			frequenciesMid[k] = v;
+		}
+		//high
+		String filePathH = application.getRealPath("FreqHigh");
+		BufferedReader brH = new BufferedReader(new FileReader(filePathH));
+		int[] frequenciesHigh = new int[10000];
+		//get the hashmap...
+		while ((tuple = brH.readLine()) != null) {
+			String[] tuples = tuple.split(" ");
+			k = Integer.parseInt(tuples[0]);
+			v = Integer.parseInt(tuples[1]);
+			frequenciesHigh[k] = v;
+		}
+		
+		//original
+		String filePathO = application.getRealPath("FreqO");
+		BufferedReader brO = new BufferedReader(new FileReader(filePathO));
+		int[] frequenciesOigh = new int[10000];
+		//get the hashmap...
+		while ((tuple = brO.readLine()) != null) {
+			String[] tuples = tuple.split(" ");
+			k = Integer.parseInt(tuples[0]);
+			v = Integer.parseInt(tuples[1]);
+			frequenciesOigh[k] = v;
 		}
 	%>
 
 	<script type="text/javascript">
 		
 	<%-- assign JSP array to javascript array once for ever! --%>
-		var frequencyMap = new Array(10000);
-	<%for (int i = 0; i < 10000; i++) {%>
-		frequencyMap[
-	<%=i%>
-		] = [
-	<%=i / 100%>
-		,
-	<%=i % 100%>
-		,
-	<%=frequencies[i]%>
-		];
-	<%}%>
-		var squeezedFrequencyMap = new Array(100);
+	var squeezedFrequencyMapLow = new Array(100);
 	<%-- Squeeze the matrix to 10 * 10 --%>
-		
 	<%int frequencyCount = 0;%>
-		
 	<%for (int i = 0; i < 10000; i++) {%>
-		
-	<%frequencyCount += frequencies[i];%>
-		
-	<%if (i % 100 == 0) {%>
-		
+	<%frequencyCount += frequenciesLow[i];%>
+	<%if ( (i+1) % 100 == 0) {%>
 	<%int s = i / 100;%>
-		squeezedFrequencyMap[
+		squeezedFrequencyMapLow[
 	<%=s%>
 		] = [
 	<%=(int) s / 10%>
@@ -256,60 +276,192 @@ div.bar {
 	<%=frequencyCount%>
 		];
 	<%frequencyCount = 0;%>
-		
 	<%}%>
-		
 	<%}%>
-		var frequencyCount = 0;
 
-		function showFrequenciesFunc(name) {
+	var squeezedFrequencyMapMid = new Array(100);
+	<%-- Squeeze the matrix to 10 * 10 --%>
+	<%frequencyCount = 0;%>
+	<%for (int i = 0; i < 10000; i++) {%>
+	<%frequencyCount += frequenciesMid[i];%>
+	<%if ( (i+1) % 100 == 0) {%>
+	<%int s = i / 100;%>
+		squeezedFrequencyMapMid[
+	<%=s%>
+		] = [
+	<%=(int) s / 10%>
+		,
+	<%=(int) s % 10%>
+		,
+	<%=frequencyCount%>
+		];
+	<%frequencyCount = 0;%>
+	<%}%>
+	<%}%>
+	
+	var squeezedFrequencyMapHigh = new Array(100);
+	<%-- Squeeze the matrix to 10 * 10 --%>
+	<%frequencyCount = 0;%>
+	<%for (int i = 0; i < 10000; i++) {%>
+	<%frequencyCount += frequenciesHigh[i];%>
+	<%if ( (i+1) % 100 == 0) {%>
+	<%int s = i / 100;%>
+		squeezedFrequencyMapHigh[
+	<%=s%>
+		] = [
+	<%=(int) s / 10%>
+		,
+	<%=(int) s % 10%>
+		,
+	<%=frequencyCount%>
+		];
+	<%frequencyCount = 0;%>
+	<%}%>
+	<%}%>
+	
+	var squeezedFrequencyMapOigh = new Array(100);
+	<%-- Squeeze the matrix to 10 * 10 --%>
+	<%frequencyCount = 0;%>
+	<%for (int i = 0; i < 10000; i++) {%>
+	<%frequencyCount += frequenciesOigh[i];%>
+	<%if ( (i+1) % 100 == 0) {%>
+	<%int s = i / 100;%>
+		squeezedFrequencyMapOigh[
+	<%=s%>
+		] = [
+	<%=(int) s / 10%>
+		,
+	<%=(int) s % 10%>
+		,
+	<%=frequencyCount%>
+		];
+	<%frequencyCount = 0;%>
+	<%}%>
+	<%}%>
+		
+		function animate(){
+			d3.select(this).transition().
+			duration(1000).attr("r",10).transision().delay(1000).attr("r",20);
+		}
+		function showfrequenciesFunc(name) {
 			//finally get the array......
 			//pairs from 1 to 10000
 			//2D map can show the data..
 			//d3.select("body").append("p").transition().text(frequencyMap[key][0]);
+			
 			if (name == "low") {
 				var svg = d3.select("body").append("svg").attr("width", 300)
 						.attr("height", 300);
-
-				svg.selectAll("circle").data(squeezedFrequencyMap).enter()
+				var title = "LOW ACCURACY";	
+				svg.selectAll("text").data(title).enter().append("text")
+				.text("LOW ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",20).attr("fill","Orange");
+				
+				svg.selectAll("circle").data(squeezedFrequencyMapLow).enter()
 						.append("circle").attr("cx", function(d) {
 							return d[0] * 20 + 10;
 						}).attr("cy", function(d) {
-							return d[1] * 20 + 10;
+							return d[1] * 20 + 50;
 						}).attr("fill", function(d) {
 							//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
-							var l = 100 - d[2] * 2;
-							return "hsl(200, 10%, " + l + "%)";
+							var l = (100 - (d[2] / 1.5));
+							return "hsl(0, 10%, " + l + "%)";
 							//return "hsl(200, 10%, 0%)";
-						}).attr("r", 10);
+						}).attr("r", 10)
+						.on("mouseover", function(){d3.select(this).style("fill", "Orange");})
+						.on("mouseout", function(){
+							if(d3.select(this).attr("r") != 10){
+								d3.select(this).transition().delay(0).duration(1000).attr("r",10)
+								.each("end",function(){
+									d3.select(this).style("fill", function(d){
+										var l = (100 - (d[2] / 1.5));
+										return "hsl(0, 10%, " + l + "%)";
+										});
+								});			
+							}
+							else{
+								d3.select(this).style("fill", function(d){
+									var l = (100 - (d[2] / 1.5));
+									return "hsl(0, 10%, " + l + "%)";
+									});
+							}
+						})
+						.on("mousedown", function(){
+							//try rander again? so that on the top layer
+							d3.select(this).style("fill", "Orange");
+							d3.select(this).transition().delay(0).duration(1000).attr("r",50);
+						});
+			}
+			
+			if(name == 'mid'){
+				var svg = d3.select("body").append("svg").attr("width", 300)
+				.attr("height", 300);
+				var title = "MID ACCURACY";
+				svg.selectAll("text").data(title).enter().append("text")
+					.text("MID ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+					.attr("font-size",20).attr("fill","Orange");
+				
+				svg.selectAll("circle").data(squeezedFrequencyMapMid).enter()
+				.append("circle").attr("cx", function(d) {
+					return d[0] * 20 + 10;
+				}).attr("cy", function(d) {
+					return d[1] * 20 + 50;
+				}).attr("fill", function(d) {
+					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
+					var l =  (100 - (d[2] / 1.5));
+					return "hsl(0, 10%, " + l + "%)";
+					//return "hsl(200, 10%, 0%)";
+				}).attr("r", 10);
+				
+			}
+			
+			if(name == 'high'){
+				var svg = d3.select("body").append("svg").attr("width", 300)
+				.attr("height", 300);
+				var title = "HIGH ACCURACY";	
+				svg.selectAll("text").data(title).enter().append("text")
+				.text("HIGH ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",20).attr("fill","Orange");
+				svg.selectAll("circle").data(squeezedFrequencyMapHigh).enter()
+				.append("circle").attr("cx", function(d) {
+					return d[0] * 20 + 10;
+				}).attr("cy", function(d) {
+					return d[1] * 20 + 50;
+				}).attr("fill", function(d) {
+					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
+					var l = (100 - (d[2] / 3));
+					return "hsl(0, 10%, " + l + "%)";
+					//return "hsl(200, 10%, 0%)";
+				}).attr("r", 10);
+				
+			}
+			
+			if(name == 'origin'){
+				var svg = d3.select("body").append("svg").attr("width", 300)
+				.attr("height", 300);
+				var title = "DATASET";	
+				
+				svg.selectAll("text").data(title).enter().append("text")
+				.text("DATASET").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",20).attr("fill","Orange");
+				
+				svg.selectAll("DATASET").data(squeezedFrequencyMapOigh).enter()
+				.append("circle").attr("cx", function(d) {
+					return d[0] * 20 + 10;
+				}).attr("cy", function(d) {
+					return d[1] * 20 + 50;
+				}).attr("fill", function(d) {
+					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
+					var l = (100 - d[2] / 100);
+					return "hsl(0, 10%, " + l + "%)";
+					//return "hsl(200, 10%, 0%)";
+				}).attr("r", 10);
+				
+				
 			}
 
 		}
 
-		function showOneFrequenciesFunc() {
-			//var svg = d3.select("body").append("svg").attr("width", 1000).attr("height", 1000);
-			var svg = d3.select("body").selectAll("svg");
-
-			var X = 20 * (frequencyCount / 100);
-			var Y = 20 * (frequencyCount % 100);
-
-			//svg.selectAll("circle").data(value).enter().append("circle")
-			//	.attr("cx",X).attr("cy", Y).attr("r", 5).attr("class", "pumpkin");
-
-			//Create SVG element
-
-			svg.selectAll("circle").data(frequencyMap).enter().append("circle")
-					.attr("cx", function(d) {
-						return d[0];
-					}).attr("cy", function(d) {
-						return d[1];
-					}).attr("r", 5);
-
-			XX = XX + 10;
-			YY = YY + 10;
-			frequencyCount++;
-
-		}
 	</script>
 
 
@@ -324,19 +476,18 @@ div.bar {
 		<button type="button" onclick="transitionFunc()">transition</button>
 	</p>
 	<p>
-		<button type="button" onclick="showFrequenciesFunc('low')">showFrequenciesLow</button>
+		<button type="button" onclick="showfrequenciesFunc('low')">showfrequenciesLow</button>
 	</p>
 	<p>
-		<button type="button" onclick="showFrequenciesFunc()">showFrequenciesMid</button>
+		<button type="button" onclick="showfrequenciesFunc('mid')">showfrequenciesMid</button>
 	</p>
 	<p>
-		<button type="button" onclick="showFrequenciesFunc()">showFrequenciesHigh</button>
+		<button type="button" onclick="showfrequenciesFunc('high')">showfrequenciesHigh</button>
 	</p>
 	<p>
-		<button type="button" onclick="showFrequenciesFunc()">showFrequenciesOrigin</button>
+		<button type="button" onclick="showfrequenciesFunc('origin')">showfrequenciesOrigin</button>
 	</p>
-
-	<!-- SVG testing -->
+	
 
 </body>
 </html>
