@@ -84,6 +84,14 @@ div.bar {
 	stroke: orange;
 	stroke-width: 5;
 }
+
+.frequencyNode circle{
+	
+}
+.frequencyNode text{
+	pointer-events: none;
+  	font: 10px sans-serif;
+}
 </style>
 
 
@@ -123,7 +131,6 @@ div.bar {
 				var barWidth = parseFloat(d3.select(this).style("width")) * d;
 				return barWidth + "px"
 			});
-
 			count++;
 		} else if (count == 1) {
 
@@ -202,6 +209,10 @@ div.bar {
 
 
 <body>
+ <h2>
+      <span>U.S. commercial airports</span>, 2008<br>
+      great arcs and symbol map
+</h2>
 
 	<%
 		String tuple;
@@ -338,7 +349,7 @@ div.bar {
 	<%frequencyCount = 0;%>
 	<%}%>
 	<%}%>
-		
+	
 		function animate(){
 			d3.select(this).transition().
 			duration(1000).attr("r",10).transision().delay(1000).attr("r",20);
@@ -351,119 +362,311 @@ div.bar {
 			
 			if (name == "low") {
 				var svg = d3.select("body").append("svg").attr("width", 300)
-						.attr("height", 300);
-				var title = "LOW ACCURACY";	
-				svg.selectAll("text").data(title).enter().append("text")
-				.text("LOW ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
-				.attr("font-size",20).attr("fill","Orange");
+						.attr("height", 350);
 				
-				svg.selectAll("circle").data(squeezedFrequencyMapLow).enter()
-						.append("circle").attr("cx", function(d) {
-							return d[0] * 20 + 10;
-						}).attr("cy", function(d) {
-							return d[1] * 20 + 50;
-						}).attr("fill", function(d) {
-							//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
-							var l = (100 - (d[2] / 1.5));
-							return "hsl(0, 10%, " + l + "%)";
-							//return "hsl(200, 10%, 0%)";
-						}).attr("r", 10)
-						.on("mouseover", function(){d3.select(this).style("fill", "Orange");})
-						.on("mouseout", function(){
-							if(d3.select(this).attr("r") != 10){
-								d3.select(this).transition().delay(0).duration(1000).attr("r",10)
-								.each("end",function(){
-									d3.select(this).style("fill", function(d){
-										var l = (100 - (d[2] / 1.5));
-										return "hsl(0, 10%, " + l + "%)";
-										});
-								});			
-							}
-							else{
-								d3.select(this).style("fill", function(d){
-									var l = (100 - (d[2] / 1.5));
-									return "hsl(0, 10%, " + l + "%)";
-									});
-							}
-						})
-						.on("mousedown", function(){
-							//try rander again? so that on the top layer
-							d3.select(this).style("fill", "Orange");
-							d3.select(this).transition().delay(0).duration(1000).attr("r",50);
-						});
-			}
-			
-			if(name == 'mid'){
-				var svg = d3.select("body").append("svg").attr("width", 300)
-				.attr("height", 300);
-				var title = "MID ACCURACY";
-				svg.selectAll("text").data(title).enter().append("text")
-					.text("MID ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				group = svg.append("svg:g");
+				title = group.append("svg:text").text("LOW ACCURACY").attr("x", 140).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
 					.attr("font-size",20).attr("fill","Orange");
-				
-				svg.selectAll("circle").data(squeezedFrequencyMapMid).enter()
+				metadataRangeL = group.append("svg:text").text("Value Range: NULL").attr("x", 140).attr("y", 270).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				//metadata.text("wow");
+				metadataFrequencyL = group.append("svg:text").text("Frequency: NULL").attr("x", 140).attr("y", 300).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				frequencyCircles = group.selectAll(".frequencyNode").data(squeezedFrequencyMapLow).enter()
 				.append("circle").attr("cx", function(d) {
-					return d[0] * 20 + 10;
-				}).attr("cy", function(d) {
 					return d[1] * 20 + 50;
+				}).attr("cy", function(d) {
+					return d[0] * 20 + 50;
 				}).attr("fill", function(d) {
 					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
 					var l =  (100 - (d[2] / 1.5));
 					return "hsl(0, 10%, " + l + "%)";
 					//return "hsl(200, 10%, 0%)";
-				}).attr("r", 10);
+				}).attr("r", 10)
+				.on("mouseover", function(d){
+					//show the metadata
+					metadataRangeL.text(function(){
+						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+					});
+					metadataFrequencyL.text(function(){
+						return "Frequency: " + d[2];
+					});
+					this.parentNode.appendChild(this);
+					d3.select(this).style("stroke", "Orange").style("fill", function(d){
+								var l = (100 - (d[2] / 1.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+					d3.select(this).transition().delay(0).duration(100).attr("r",20)
+						.each("end", function(){
+							d3.select(this).transition().delay(0).duration(300).
+								attr("r",10).each("end", function(){
+								d3.select(this).style("stroke", null);
+							});	
+						});
+				})			
+				.on("mouseout", function(){
+					if(d3.select(this).attr("r") != 10){
+						d3.select(this).transition().delay(0).duration(300).attr("r",10)
+						.each("end",function(){
+							d3.select(this).style("stroke", null).style("fill", function(d){
+								var l = (100 - (d[2] / 1.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+						});						
+					}
+					else{
+						d3.select(this).style("fill", function(d){
+							var l = (100 - (d[2] / 1.5));
+							return "hsl(0, 10%, " + l + "%)";
+							});
+					}
+				})
+				.on("mousedown", function(){
+						
+				});				
+			}
+			
+			if(name == 'mid'){
+				var svg = d3.select("body").append("svg").attr("width", 300)
+				.attr("height", 350);
+		
+				group = svg.append("svg:g");
+				title = group.append("svg:text").text("MID ACCURACY").attr("x", 140).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+					.attr("font-size",20).attr("fill","Orange");
+				metadataRangeM = group.append("svg:text").text("Value Range: NULL").attr("x", 140).attr("y", 270).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				//metadata.text("wow");
+				metadataFrequencyM = group.append("svg:text").text("Frequency: NULL").attr("x", 140).attr("y", 300).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				frequencyCircles = group.selectAll(".frequencyNode").data(squeezedFrequencyMapMid).enter()
+				.append("circle").attr("cx", function(d) {
+					return d[1] * 20 + 50;
+				}).attr("cy", function(d) {
+					return d[0] * 20 + 50;
+				}).attr("fill", function(d) {
+					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
+					var l =  (100 - (d[2] / 1.5));
+					return "hsl(0, 10%, " + l + "%)";
+					//return "hsl(200, 10%, 0%)";
+				}).attr("r", 10)
+				.on("mouseover", function(d){
+					//show the metadata
+					metadataRangeM.text(function(){
+						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+					});
+					metadataFrequencyM.text(function(){
+						return "Frequency: " + d[2];
+					});
+					this.parentNode.appendChild(this);
+					d3.select(this).style("stroke", "Orange").style("fill", function(d){
+								var l = (100 - (d[2] / 1.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+					d3.select(this).transition().delay(0).duration(100).attr("r",20)
+						.each("end", function(){
+							d3.select(this).transition().delay(0).duration(300).
+								attr("r",10).each("end", function(){
+								d3.select(this).style("stroke", null);
+							});	
+						});
+				})			
+				.on("mouseout", function(){
+					if(d3.select(this).attr("r") != 10){
+						d3.select(this).transition().delay(0).duration(300).attr("r",10)
+						.each("end",function(){
+							d3.select(this).style("stroke", null).style("fill", function(d){
+								var l = (100 - (d[2] / 1.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+						});						
+					}
+					else{
+						d3.select(this).style("fill", function(d){
+							var l = (100 - (d[2] / 1.5));
+							return "hsl(0, 10%, " + l + "%)";
+							});
+					}
+				})
+				.on("mousedown", function(){
+						
+				});		
 				
 			}
 			
 			if(name == 'high'){
 				var svg = d3.select("body").append("svg").attr("width", 300)
-				.attr("height", 300);
-				var title = "HIGH ACCURACY";	
-				svg.selectAll("text").data(title).enter().append("text")
-				.text("HIGH ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
-				.attr("font-size",20).attr("fill","Orange");
-				svg.selectAll("circle").data(squeezedFrequencyMapHigh).enter()
+				.attr("height", 350);
+		
+				group = svg.append("svg:g");
+				title = group.append("svg:text").text("HIGH ACCURACY").attr("x", 140).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+					.attr("font-size",20).attr("fill","Orange");
+				metadataRangeH = group.append("svg:text").text("Value Range: NULL").attr("x", 140).attr("y", 270).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				//metadata.text("wow");
+				metadataFrequencyH = group.append("svg:text").text("Frequency: NULL").attr("x", 140).attr("y", 300).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				frequencyCircles = group.selectAll(".frequencyNode").data(squeezedFrequencyMapHigh).enter()
 				.append("circle").attr("cx", function(d) {
-					return d[0] * 20 + 10;
-				}).attr("cy", function(d) {
 					return d[1] * 20 + 50;
+				}).attr("cy", function(d) {
+					return d[0] * 20 + 50;
 				}).attr("fill", function(d) {
 					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
-					var l = (100 - (d[2] / 3));
+					var l =  (100 - (d[2] / 2.5));
 					return "hsl(0, 10%, " + l + "%)";
 					//return "hsl(200, 10%, 0%)";
-				}).attr("r", 10);
+				}).attr("r", 10)
+				.on("mouseover", function(d){
+					//show the metadata
+					metadataRangeH.text(function(){
+						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+					});
+					metadataFrequencyH.text(function(){
+						return "Frequency: " + d[2];
+					});
+					this.parentNode.appendChild(this);
+					d3.select(this).style("stroke", "Orange").style("fill", function(d){
+								var l = (100 - (d[2] / 2.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+					d3.select(this).transition().delay(0).duration(100).attr("r",20)
+						.each("end", function(){
+							d3.select(this).transition().delay(0).duration(300).
+								attr("r",10).each("end", function(){
+								d3.select(this).style("stroke", null);
+							});	
+						});
+				})			
+				.on("mouseout", function(){
+					if(d3.select(this).attr("r") != 10){
+						d3.select(this).transition().delay(0).duration(300).attr("r",10)
+						.each("end",function(){
+							d3.select(this).style("stroke", null).style("fill", function(d){
+								var l = (100 - (d[2] / 2.5));
+								return "hsl(0, 10%, " + l + "%)";
+								});
+						});						
+					}
+					else{
+						d3.select(this).style("fill", function(d){
+							var l = (100 - (d[2] / 1.5));
+							return "hsl(0, 10%, " + l + "%)";
+							});
+					}
+				})
+				.on("mousedown", function(){
+						
+				});		
 				
 			}
 			
 			if(name == 'origin'){
 				var svg = d3.select("body").append("svg").attr("width", 300)
-				.attr("height", 300);
-				var title = "DATASET";	
-				
-				svg.selectAll("text").data(title).enter().append("text")
-				.text("DATASET").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
-				.attr("font-size",20).attr("fill","Orange");
-				
-				svg.selectAll("DATASET").data(squeezedFrequencyMapOigh).enter()
+				.attr("height", 350);
+		
+				group = svg.append("svg:g");
+				title = group.append("svg:text").text("DATASET").attr("x", 140).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+					.attr("font-size",20).attr("fill","Orange");
+				metadataRangeO = group.append("svg:text").text("Value Range: NULL").attr("x", 140).attr("y", 270).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				//metadata.text("wow");
+				metadataFrequencyO = group.append("svg:text").text("Frequency: NULL").attr("x", 140).attr("y", 300).attr("font-family", "Verdana").attr("text-anchor", "middle")
+				.attr("font-size",15).attr("fill","Red");
+				frequencyCircles = group.selectAll(".frequencyNode").data(squeezedFrequencyMapOigh).enter()
 				.append("circle").attr("cx", function(d) {
-					return d[0] * 20 + 10;
-				}).attr("cy", function(d) {
 					return d[1] * 20 + 50;
+				}).attr("cy", function(d) {
+					return d[0] * 20 + 50;
 				}).attr("fill", function(d) {
-					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
-					var l = (100 - d[2] / 100);
-					return "hsl(0, 10%, " + l + "%)";
+					//var l =  (100 - (d[2] / 2.5));
+					return "hsl(100, 10%, 50%)";
 					//return "hsl(200, 10%, 0%)";
-				}).attr("r", 10);
+				}).attr("r", 10)
+				.on("mouseover", function(d){
+					//show the metadata
+					metadataRangeO.text(function(){
+						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+					});
+					metadataFrequencyO.text(function(){
+						return "Frequency: " + d[2];
+					});
+					this.parentNode.appendChild(this);
+					d3.select(this).style("stroke", "Orange").style("fill", function(d){
+								return "hsl(100, 10%, 50%)";
+								});
+					d3.select(this).transition().delay(0).duration(100).attr("r",20)
+						.each("end", function(){
+							d3.select(this).transition().delay(0).duration(300).
+								attr("r",10).each("end", function(){
+								d3.select(this).style("stroke", null);
+							});	
+						});
+				})			
+				.on("mouseout", function(){
+					if(d3.select(this).attr("r") != 10){
+						d3.select(this).transition().delay(0).duration(300).attr("r",10)
+						.each("end",function(){
+							d3.select(this).style("stroke", null).style("fill", function(d){
+								return "hsl(100, 10%, 50%)";
+								});
+						});						
+					}
+					else{
+						d3.select(this).style("fill", function(d){
+							return "hsl(100, 10%, 50%)";
+							});
+					}
+				})
+				.on("mousedown", function(){
+						
+				});		
+				
 				
 				
 			}
 
 		}
 
+		
+		function showfrequenciesFunc2(name) {
+			if(name == 'mid'){
+				var svg = d3.select("body").append("svg").attr("width", 300)
+				.attr("height", 300);
+				var title = "HIGH ACCURACY";
+				svg.selectAll("text").data(title).enter().append("text")
+					.text("HIGH ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+					.attr("font-size",20).attr("fill","Orange");
+				
+				var node = svg.selectAll(".frequencyNode").data(squeezedFrequencyMapMid).enter()
+					.append("g").attr("class","frequencyNode");
+				
+				node.append("circle").attr("cx", function(d) {
+					return d[0] * 20 + 10;
+				}).attr("cy", function(d) {
+					return d[1] * 20 + 50;
+				}).attr("fill", function(d) {
+					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
+					var l =  (100 - (d[2] / 3));
+					return "hsl(0, 10%, " + l + "%)";
+					//return "hsl(200, 10%, 0%)";
+				}).attr("r", 10);
+				
+				node.append("text").attr("text-anchor", "middle").
+				//attr("dx", -7).
+				attr("dy", "2").
+				text(function(d){
+					return d[2];
+				})
+				.attr("x", function(d) {
+					return d[0] * 20 + 10;
+				}).attr("y", function(d) {
+					return d[1] * 20 + 50;
+				});
+				
+			}
+		}
+		
 	</script>
-
 
 	<p>
 		<button type="button" onclick="addBar()">addBar</button>
@@ -481,6 +684,8 @@ div.bar {
 	<p>
 		<button type="button" onclick="showfrequenciesFunc('mid')">showfrequenciesMid</button>
 	</p>
+	
+	
 	<p>
 		<button type="button" onclick="showfrequenciesFunc('high')">showfrequenciesHigh</button>
 	</p>
