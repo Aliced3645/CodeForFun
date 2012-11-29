@@ -209,10 +209,6 @@ div.bar {
 
 
 <body>
- <h2>
-      <span>U.S. commercial airports</span>, 2008<br>
-      great arcs and symbol map
-</h2>
 
 	<%
 		String tuple;
@@ -354,6 +350,7 @@ div.bar {
 			d3.select(this).transition().
 			duration(1000).attr("r",10).transision().delay(1000).attr("r",20);
 		}
+		
 		function showfrequenciesFunc(name) {
 			//finally get the array......
 			//pairs from 1 to 10000
@@ -386,7 +383,7 @@ div.bar {
 				.on("mouseover", function(d){
 					//show the metadata
 					metadataRangeL.text(function(){
-						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+						return "Value Range: [ " + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
 					});
 					metadataFrequencyL.text(function(){
 						return "Frequency: " + d[2];
@@ -452,7 +449,7 @@ div.bar {
 				.on("mouseover", function(d){
 					//show the metadata
 					metadataRangeM.text(function(){
-						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+						return "Value Range: [ " + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
 					});
 					metadataFrequencyM.text(function(){
 						return "Frequency: " + d[2];
@@ -519,7 +516,7 @@ div.bar {
 				.on("mouseover", function(d){
 					//show the metadata
 					metadataRangeH.text(function(){
-						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+						return "Value Range: [ " + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
 					});
 					metadataFrequencyH.text(function(){
 						return "Frequency: " + d[2];
@@ -585,7 +582,7 @@ div.bar {
 				.on("mouseover", function(d){
 					//show the metadata
 					metadataRangeO.text(function(){
-						return "Value Range: [" + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
+						return "Value Range: [ " + 100 * (d[0]*10+d[1]) + " , " + 100 * (d[0]*10+d[1] + 1) + " ] ";
 					});
 					metadataFrequencyO.text(function(){
 						return "Frequency: " + d[2];
@@ -626,45 +623,60 @@ div.bar {
 			}
 
 		}
-
-		
-		function showfrequenciesFunc2(name) {
-			if(name == 'mid'){
-				var svg = d3.select("body").append("svg").attr("width", 300)
-				.attr("height", 300);
-				var title = "HIGH ACCURACY";
-				svg.selectAll("text").data(title).enter().append("text")
-					.text("HIGH ACCURACY").attr("x", 100).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
-					.attr("font-size",20).attr("fill","Orange");
-				
-				var node = svg.selectAll(".frequencyNode").data(squeezedFrequencyMapMid).enter()
-					.append("g").attr("class","frequencyNode");
-				
-				node.append("circle").attr("cx", function(d) {
-					return d[0] * 20 + 10;
-				}).attr("cy", function(d) {
-					return d[1] * 20 + 50;
-				}).attr("fill", function(d) {
-					//return "hsl(200, " +  d[2] * 2  + "% ,50%)";
-					var l =  (100 - (d[2] / 3));
-					return "hsl(0, 10%, " + l + "%)";
-					//return "hsl(200, 10%, 0%)";
-				}).attr("r", 10);
-				
-				node.append("text").attr("text-anchor", "middle").
-				//attr("dx", -7).
-				attr("dy", "2").
-				text(function(d){
-					return d[2];
-				})
-				.attr("x", function(d) {
-					return d[0] * 20 + 10;
-				}).attr("y", function(d) {
-					return d[1] * 20 + 50;
-				});
-				
-			}
+	
+	
+	var center = 500;
+	var planets = new Array(4);
+	planets[0] = [ 100, 0, 0];
+	planets[1] = [ 36, 120, 3e-2];
+	planets[2] = [ 10,  170,  2e-2];
+	planets[3] = [ 5,  200,  1e-2];
+	var start = Date.now();
+	var svg = d3.select("body").append("svg").attr("width", 1000)
+	.attr("height", 1000);
+	group = svg.append("svg:g").attr("transform", "translate(" + center + "," + center + ")");
+	planetsGroup = group.selectAll("circle").data(planets).enter()
+	.append("circle").attr("cx", function(d) {
+		return d[1];
+	}).attr("cy", function(d) {
+		return d[1];
+	}).attr("fill", function(d) {
+		if(d[0] != 100){
+			var l =  (100 - (d[0])/2);
+			return "hsl(0, 10%, " + l + "%)";
 		}
+		else{
+			return "hsl(0, 53%, 58%)";
+		}
+	}).attr("r", function(d){
+		return d[0];
+	}).attr("stroke", "Orange").attr("stroke-width", function(d){
+		return d[0] / 10;
+	}).each(planetEnter);
+	
+	
+	d3.timer(function() {
+		  var elapsed = Date.now() - start;
+		  var rotate = function(d) { 
+			  return "rotate(" + d[2] * elapsed + ")"; };
+		  planetsGroup.attr("transform", rotate);
+	});
+	
+	
+	function planetEnter(d,i){
+		var n = Math.floor(2 * Math.PI * d[0] / Math.SQRT1_2),
+	    k = 360 / n;
+		d3.select(this).selectAll("g")
+			.data(d3.range(n).map(function() { return d; }))
+			.attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d[0] + ")"; });
+	}
+	
+	function showDBSizes(){
+		
+		
+		
+		
+	}
 		
 	</script>
 
@@ -684,13 +696,15 @@ div.bar {
 	<p>
 		<button type="button" onclick="showfrequenciesFunc('mid')">showfrequenciesMid</button>
 	</p>
-	
-	
 	<p>
 		<button type="button" onclick="showfrequenciesFunc('high')">showfrequenciesHigh</button>
 	</p>
 	<p>
 		<button type="button" onclick="showfrequenciesFunc('origin')">showfrequenciesOrigin</button>
+	</p>
+	
+	<p>
+		<button type="button" onclick="showDBSizes()">showDBSizes</button>
 	</p>
 	
 
