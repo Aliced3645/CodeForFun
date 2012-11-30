@@ -616,43 +616,89 @@ div.bar {
 				})
 				.on("mousedown", function(){
 						
-				});		
-				
-				
-				
+				});				
 			}
-
 		}
 	
-	
-	var center = 500;
+	var center = 250;
 	var planets = new Array(4);
 	planets[0] = [ 100, 0, 0];
 	planets[1] = [ 36, 120, 3e-2];
 	planets[2] = [ 10,  170,  2e-2];
-	planets[3] = [ 5,  200,  1e-2];
+	planets[3] = [ 5,  185,  1e-2];
 	var start = Date.now();
-	var svg = d3.select("body").append("svg").attr("width", 1000)
-	.attr("height", 1000);
-	group = svg.append("svg:g").attr("transform", "translate(" + center + "," + center + ")");
+	var svg = d3.select("body").append("svg").attr("width", 600)
+	.attr("height", 500);
+	group = svg.append("svg:g").attr("transform", "translate(" + center + "," + 250 + ")scale(.8)")
+				.attr("fill","hsl(207, 70%, 81%)");
+	dataSizeToShow = group.append("svg:text").text("Dataset Size: NULL").attr("y", 300).attr("font-family", "Delicious")
+	.attr("text-anchor", "middle")
+	.attr("font-size",30).attr("fill","Red");
 	planetsGroup = group.selectAll("circle").data(planets).enter()
 	.append("circle").attr("cx", function(d) {
 		return d[1];
 	}).attr("cy", function(d) {
 		return d[1];
 	}).attr("fill", function(d) {
-		if(d[0] != 100){
-			var l =  (100 - (d[0])/2);
-			return "hsl(0, 10%, " + l + "%)";
-		}
-		else{
+		if(d[0] == 100){
 			return "hsl(0, 53%, 58%)";
+		}
+		else if(d[0] == 36){
+			return "hsl(305, 70%, 45%)";
+		}
+		else if(d[0] == 10){
+			return "hsl(57, 70%, 45%)";
+		}
+		else if(d[0] == 5){
+			return "hsl(207, 70%, 52%)";
 		}
 	}).attr("r", function(d){
 		return d[0];
 	}).attr("stroke", "Orange").attr("stroke-width", function(d){
 		return d[0] / 10;
+	}).on("mouseover", function(d){
+		this.parentNode.appendChild(this);
+		d3.select(this).transition().delay(0).duration(300).attr("r",function(){
+			return d[0] * 1.5;
+		}).each("end", function(){
+				d3.select(this).transition().delay(0).duration(500).
+					attr("r",function(){
+						return d[0];
+					}).each("end", function(){
+					d3.select(this).style("stroke", null);
+				});	
+			});
+			dataSizeToShow.text(function(){
+				if(d[0] == 100){
+					return "Dataset Size: 1000000";
+				}
+				else if(d[0] == 36){
+					return "Dataset Size: 18647";
+				}
+				else if(d[0] == 10){
+					return "Dataset Size: 2984";
+				}
+				else if(d[0] == 5){
+					return "Dataset Size: 1166";
+				}
+			}).attr("fill", function() {
+				if(d[0] == 100){
+					return "hsl(0, 53%, 58%)";
+				}
+				else if(d[0] == 36){
+					return "hsl(305, 70%, 45%)";
+				}
+				else if(d[0] == 10){
+					return "hsl(57, 70%, 45%)";
+				}
+				else if(d[0] == 5){
+					return "hsl(207, 70%, 52%)";
+				}
+			});
+			
+			
 	}).each(planetEnter);
+	
 	
 	
 	d3.timer(function() {
@@ -668,13 +714,18 @@ div.bar {
 	    k = 360 / n;
 		d3.select(this).selectAll("g")
 			.data(d3.range(n).map(function() { return d; }))
-			.attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d[0] + ")"; });
+			.attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d[0] + ")"; })
+			;
 	}
 	
 	function showDBSizes(){
 		
-		
-		
+		ring = group.selectAll("circle").data(planets).enter()
+		.append("circle"). attr("fill", "hsl(207, 70%, 81%)")
+		.attr("r", function(d){
+			return d[1];
+		}).attr("cx", 0).attr("cy", 0);	
+	
 		
 	}
 		
