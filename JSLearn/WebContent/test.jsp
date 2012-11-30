@@ -620,7 +620,49 @@ div.bar {
 			}
 		}
 	
-	var center = 250;
+	
+	function showDBSizes(){
+		
+		ring = group.selectAll("circle").data(planets).enter()
+		.append("circle"). attr("fill", "hsl(207, 70%, 81%)")
+		.attr("r", function(d){
+			return d[1];
+		}).attr("cx", 0).attr("cy", 0);	
+	
+		
+	}
+		
+	</script>
+
+	<p>
+		<button type="button" onclick="addBar()">addBar</button>
+	</p>
+	<p>
+		<button type="button" onclick="resizeFunc()">ResizeBar</button>
+	</p>
+	<!-- <button type="button" onclick="dataBindFunc()">dataBindFunc</button> -->
+	<p>
+		<button type="button" onclick="transitionFunc()">transition</button>
+	</p>
+	<p>
+		<button type="button" onclick="showfrequenciesFunc('low')">showfrequenciesLow</button>
+	</p>
+	<p>
+		<button type="button" onclick="showfrequenciesFunc('mid')">showfrequenciesMid</button>
+	</p>
+	<p>
+		<button type="button" onclick="showfrequenciesFunc('high')">showfrequenciesHigh</button>
+	</p>
+	<p>
+		<button type="button" onclick="showfrequenciesFunc('origin')">showfrequenciesOrigin</button>
+	</p>
+	
+	<p>
+		<button type="button" onclick="showDBSizes()">showDBSizes</button>
+	</p>
+
+<script>
+var center = 250;
 	var planets = new Array(4);
 	planets[0] = [ 100, 0, 0];
 	planets[1] = [ 36, 120, 3e-2];
@@ -718,46 +760,7 @@ div.bar {
 			;
 	}
 	
-	function showDBSizes(){
-		
-		ring = group.selectAll("circle").data(planets).enter()
-		.append("circle"). attr("fill", "hsl(207, 70%, 81%)")
-		.attr("r", function(d){
-			return d[1];
-		}).attr("cx", 0).attr("cy", 0);	
-	
-		
-	}
-		
-	</script>
-
-	<p>
-		<button type="button" onclick="addBar()">addBar</button>
-	</p>
-	<p>
-		<button type="button" onclick="resizeFunc()">ResizeBar</button>
-	</p>
-	<!-- <button type="button" onclick="dataBindFunc()">dataBindFunc</button> -->
-	<p>
-		<button type="button" onclick="transitionFunc()">transition</button>
-	</p>
-	<p>
-		<button type="button" onclick="showfrequenciesFunc('low')">showfrequenciesLow</button>
-	</p>
-	<p>
-		<button type="button" onclick="showfrequenciesFunc('mid')">showfrequenciesMid</button>
-	</p>
-	<p>
-		<button type="button" onclick="showfrequenciesFunc('high')">showfrequenciesHigh</button>
-	</p>
-	<p>
-		<button type="button" onclick="showfrequenciesFunc('origin')">showfrequenciesOrigin</button>
-	</p>
-	
-	<p>
-		<button type="button" onclick="showDBSizes()">showDBSizes</button>
-	</p>
-	
+	</script>	
 
 </body>
 </html>
