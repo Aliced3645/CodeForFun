@@ -605,7 +605,7 @@ div.bar {
 						.each("end",function(){
 							d3.select(this).style("stroke", null).style("fill", function(d){
 								return "hsl(100, 10%, 50%)";
-								});
+								});		
 						});						
 					}
 					else{
@@ -632,6 +632,65 @@ div.bar {
 		
 	}
 		
+	function showResultsCompare(titleString, results){
+		var maxHeight = 240;
+		var ceiling = 250;
+		var heightRatio = results[3] / 210;
+		var svg = d3.select("body").append("svg").attr("width", 300)
+			.attr("height", 350);
+		group = svg.append("svg:g");
+		title = group.append("svg:text").text(titleString).attr("x", 140).attr("y", 30).attr("font-family", "Verdana").attr("text-anchor", "middle")
+		.attr("font-size",20).attr("fill","Orange");
+		resultTypeText = group.append("svg:text").text("Result Type: NULL").attr("x", 140).attr("y", 270).attr("font-family", "Verdana").attr("text-anchor", "middle")
+		.attr("font-size",15).attr("fill","Red");
+		resultValueText = group.append("svg:text").text("Result Value: NULL").attr("x", 140).attr("y", 300).attr("font-family", "Verdana").attr("text-anchor", "middle")
+		.attr("font-size",15).attr("fill","Red");
+		
+		resultBars = group.selectAll("rect").data(results).enter()
+					.append("rect")
+					.attr("x", function(d,i){
+						return i * 40 + 60;
+					})
+					.attr("y", function(d){
+						return ceiling - d / heightRatio;
+					})
+					.attr("rx", 5)
+					.attr("ry", 5)
+					.attr("width", 35)
+					.attr("height", function(d){
+						return d / heightRatio;
+					})
+					.attr("fill", function(d,i){
+						return "hsl(210, 100%, " + (i * 10 + 20) + "%)";
+					})
+					.on("mouseover", function(d,i){
+						resultTypeText.text(function(){
+							if(i == 0 )
+								return "Result Type: ACTUAL";
+							else if(i == 1)
+								return "Result Type: ESTIMATE";
+							else if(i == 2)
+								return "Result Type: LOW BOUND";
+							else if(i == 3)
+								return "Result type: HIGH BOUND";
+						});
+						
+						resultValueText.text(function(){
+							return "Result Value: " + d;
+						})
+						
+						d3.select(this).transition().delay(0).duration(500)
+							.attr("fill", "red");
+					})
+					.on("mouseout", function(d,i){
+						d3.select(this).transition().delay(0).duration(500)
+						.attr("fill", function(){
+							return "hsl(210, 100%, " + (i * 10 + 20) + "%)";
+						})
+					})
+					;
+	}
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 	</script>
 
 	<p>
@@ -660,107 +719,23 @@ div.bar {
 	<p>
 		<button type="button" onclick="showDBSizes()">showDBSizes</button>
 	</p>
+	
+	<p>
+		<script>
+			var results = new Array(4);
+			var titleString = "Aggregation:MAX";
+			results[0] = 51.24000;
+			results[1] = 50.47000;
+			results[2] = 9.82000;
+			results[3] = 98.67000;
+		</script>
+		
+		<button type="button" onclick="showResultsCompare(titleString, results)">showResultsCompare</button>
+	</p>
+	
 
 <script>
-var center = 250;
-	var planets = new Array(4);
-	planets[0] = [ 100, 0, 0];
-	planets[1] = [ 36, 120, 3e-2];
-	planets[2] = [ 10,  170,  2e-2];
-	planets[3] = [ 5,  185,  1e-2];
-	var start = Date.now();
-	var svg = d3.select("body").append("svg").attr("width", 600)
-	.attr("height", 500);
-	group = svg.append("svg:g").attr("transform", "translate(" + center + "," + 250 + ")scale(.8)")
-				.attr("fill","hsl(207, 70%, 81%)");
-	dataSizeToShow = group.append("svg:text").text("Dataset Size: NULL").attr("y", 300).attr("font-family", "Delicious")
-	.attr("text-anchor", "middle")
-	.attr("font-size",30).attr("fill","Red");
-	planetsGroup = group.selectAll("circle").data(planets).enter()
-	.append("circle").attr("cx", function(d) {
-		return d[1];
-	}).attr("cy", function(d) {
-		return d[1];
-	}).attr("fill", function(d) {
-		if(d[0] == 100){
-			return "hsl(0, 53%, 58%)";
-		}
-		else if(d[0] == 36){
-			return "hsl(305, 70%, 45%)";
-		}
-		else if(d[0] == 10){
-			return "hsl(57, 70%, 45%)";
-		}
-		else if(d[0] == 5){
-			return "hsl(207, 70%, 52%)";
-		}
-	}).attr("r", function(d){
-		return d[0];
-	}).attr("stroke", "Orange").attr("stroke-width", function(d){
-		return d[0] / 10;
-	}).on("mouseover", function(d){
-		this.parentNode.appendChild(this);
-		d3.select(this).transition().delay(0).duration(300).attr("r",function(){
-			return d[0] * 1.5;
-		}).each("end", function(){
-				d3.select(this).transition().delay(0).duration(500).
-					attr("r",function(){
-						return d[0];
-					}).each("end", function(){
-					d3.select(this).style("stroke", null);
-				});	
-			});
-			dataSizeToShow.text(function(){
-				if(d[0] == 100){
-					return "Dataset Size: 1000000";
-				}
-				else if(d[0] == 36){
-					return "Dataset Size: 18647";
-				}
-				else if(d[0] == 10){
-					return "Dataset Size: 2984";
-				}
-				else if(d[0] == 5){
-					return "Dataset Size: 1166";
-				}
-			}).attr("fill", function() {
-				if(d[0] == 100){
-					return "hsl(0, 53%, 58%)";
-				}
-				else if(d[0] == 36){
-					return "hsl(305, 70%, 45%)";
-				}
-				else if(d[0] == 10){
-					return "hsl(57, 70%, 45%)";
-				}
-				else if(d[0] == 5){
-					return "hsl(207, 70%, 52%)";
-				}
-			});
-			
-			
-	}).each(planetEnter);
-	
-	
-	
-	d3.timer(function() {
-		  var elapsed = Date.now() - start;
-		  var rotate = function(d) { 
-			  return "rotate(" + d[2] * elapsed + ")"; };
-		  planetsGroup.attr("transform", rotate);
-	});
-	
-	
-	function planetEnter(d,i){
-		var n = Math.floor(2 * Math.PI * d[0] / Math.SQRT1_2),
-	    k = 360 / n;
-		d3.select(this).selectAll("g")
-			.data(d3.range(n).map(function() { return d; }))
-			.attr("transform", function(_, i) { return "rotate(" + i * k + ")translate(" + d[0] + ")"; })
-			;
-	}
-	
-	</script>	
+</script>	
 
 </body>
 </html>
