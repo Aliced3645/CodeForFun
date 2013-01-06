@@ -30,7 +30,7 @@ public class Solution1_5 {
 			}
 			record.add(cc);
 		}		
-		
+	        	
 		//reconstruct the new String
 		String compressed = new String();
 		for(CharCount c : record){
