@@ -1,0 +1,10 @@
+String filePathH = application.getRealPath("FreqO");
+		BufferedReader brH = new BufferedReader(new FileReader(filePathH));
+		int[] frequenciesHigh = new int[10000];
+		//get the hashmap...
+		while ((tuple = brH.readLine()) != null) {
+			String[] tuples = tuple.split(" ");
+			k = Integer.parseInt(tuples[0]);
+			v = Integer.parseInt(tuples[1]);
+			frequenciesHigh[k] = v;
+		}
