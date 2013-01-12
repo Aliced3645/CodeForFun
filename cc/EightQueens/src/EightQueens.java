@@ -64,6 +64,9 @@ public class EightQueens{
                 else
                     solveEightQueen(row + 1, array);
              }
+            else{
+                //the traceback is done implicitly
+            }
         }
         
     }
