@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Stack;
 
@@ -210,10 +211,213 @@ public class BinaryTree{
         }
 
     }
+    
+
+    //find lowerest common ancestor
+    //auxiliary function, returns whether the subtree contains the destined
+    //value
+    //use dynamic programming to store the intermediate results
+    
+    
+    //the problem: we want to search for two values, so one hash is not
+    //sufficient!
+    //
+    //store the value1 circumstances!!!
+    public static HashMap<BiNode, Boolean> hash1 = new HashMap<BiNode, Boolean>();
+    //store the value2 circumstances!!!
+    public static HashMap<BiNode, Boolean> hash2 = new HashMap<BiNode, Boolean>();
+    //it is indeed a preOrder search
+    //which is a DFS
+    public static boolean whetherContains(BiNode node, int target, int whichHash){
+        
+        HashMap<BiNode, Boolean> hash = (whichHash == 1? hash1 : hash2);
+        if(node == null){
+            return false;
+        }
+        //Look up the hash table first
+        if(hash.containsKey(node))
+            return hash.get(node);
+        
+        if(node.data == target){
+            hash.put(node, true);
+            return true;
+        }
+        else{
+            boolean result = whetherContains(node.node1, target, whichHash) || whetherContains(node.node2, target, whichHash);
+            if( ! hash.containsKey(node))
+                hash.put(node, result);
+            return result;
+        }
+    }
+
+
+    //the function, returns the value of the common ancestor's value
+    //wrong point: forget to establish hash for EACH VALUE
+    public static Integer getCommonAncester(BiNode root, int value1, int value2){
+        int res = Integer.MIN_VALUE;
+        if(root == null)
+            return res;
+        
+        boolean leftContains1 = whetherContains(root.node1, value1, 1);
+        boolean leftContains2 = whetherContains(root.node1, value2, 2);
+        if(leftContains1 == leftContains2){
+            //both in the same side
+            if(leftContains1==true){
+                //in the left
+                return getCommonAncester(root.node1, value1, value2);
+            }
+            else{
+                return getCommonAncester(root.node2, value1, value2);
+            }
+        }
+        
+        else if(leftContains1 != leftContains2){
+            //not in the same side, this is the common ancester
+            //everytime found, empty the hash
+            //hash.clear();
+            return root.data;
+        }
+
+        return res;
+    }
+
+
+       
+    
+    //implement the insert and delete functions for binary tree
+    //insert returns the root node
+    public static BiNode insert(BiNode root, int value){
+        if(root == null)
+            return new BiNode(value);
+        else{
+            //root not null
+            BiNode p = root;
+            BiNode s = root;
+            if(value > root.data)
+                s = p.node2;
+            else
+                s = p.node1;
+
+            while( s != null){
+                p = s;
+
+                if(value > s.data){
+                    s = s.node2;
+                }
+                else{
+                    s = s.node1;
+                }
+            }
+            
+            //find the final
+            if( value >  p.data)
+                p.node2 = new BiNode(value);
+
+            else
+                p.node1 = new BiNode(value);
+        }
+
+        return root;
+    }
+    
+
+    //wrong point:
+    //forget to return
+    //delete a node with specified value
+    //also returns the root
+    public static BiNode delete(BiNode root, int value){
+        //first get the node
+        BiNode p = root;
+        BiNode s = root;
+        //get the node to delete
+        //check root
+        if(root.data  ==  value){
+            s = root;
+            p = null;
+        }
+
+        else{
+            if( value > s.data)
+                s = s.node2;
+            else
+                s = s.node1;
+
+            while(s != null){
+                if(s . data ==  value)
+                    break;
+                p = s;
+                if(value > s.data){
+                    s = s.node2;
+                }
+                else
+                    s = s.node1;
+            }
+        }
+        
+        
+        //delete operation basing on p and s
+        //s is the target node to delete
+        //p is the parent
+        //no children at all, leaf node
+        if( s. node1 == null && s.node2 == null){
+            if(p != null){
+                if( p.node1 == s)
+                    p.node1 = null;
+                else
+                    p.node2 = null;
+                
+                return root;
+            }
+
+            else
+                return null;
+        }
+        
+        //has only left child
+        if(s.node1 != null & s.node2 == null){
+            if(p != null){
+                if(p.node1 == s)
+                    p.node1 = s.node1;
+                else
+                    p.node2 = s.node1;
+                return root;
+            }
+
+            else{
+                return s.node1;
+            }
+        }
+        
+    
+        if(s.node2 != null){
+            //get the successor
+            BiNode successor = s.node2;
+            BiNode successorParent = s;           
+            while(successor.node1 != null){
+                successorParent = successor;
+                successor = successor.node1;
+            }
+            //replace s with value of successor
+            s.data = successor.data;
+            //delete successor 
+            if(successorParent == s){
+                successorParent.node2 = null;
+            }
+            else{
+                //if successor has right child?
+                successorParent.node1 = successor.node2; 
+            }
+            return root;
+        }
+        
+        return null;
+    }
 
     public static final void main(String[] args){
         
         //construct a binary search treee
+
+        /*
         int[] array = {1,2,3,4,5,6};
         BiNode root = BinaryTree.constructTree(array, 0, array.length - 1 );
         BinaryTree.inOrderTraverse(root);
@@ -229,5 +433,20 @@ public class BinaryTree{
         System.out.println(BinaryTree.whetherBST2(root));
         //System.out.println(BinaryTree.getNextForBST(root.node2.node1));
         BinaryTree.printSumPaths(root, 6);
+        System.out.println(BinaryTree.getCommonAncester(root, 1 , 6));
+        */
+
+        //test insertion and deletion
+        int [] array = {5, 1, 4, 3, 7, 10, 8, 12, 6};
+        BiNode root = null;
+        for(int i = 0 ; i < array.length; i ++){
+            root = BinaryTree.insert( root, array[i]);
+        }
+        
+
+        root = BinaryTree.delete(root,10);
+        BinaryTree.printByLevel(root);
+
+        
     }
 }
