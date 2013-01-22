@@ -81,6 +81,8 @@ public class BinaryTree{
 
        
     public static void printByLevel(BiNode root){
+        if(root == null)
+            return;
         LinkedList<BiNode> traversing = new LinkedList<BiNode>();
         traversing.add(root);
         LinkedList<BiNode> toTraverse = new LinkedList<BiNode>();
@@ -413,6 +415,50 @@ public class BinaryTree{
         return null;
     }
 
+    //convert a binary search tree to a heap
+
+    public static int getBinaryTreeSize(BiNode node){
+        if(node == null)
+            return 0;
+        return 1 + getBinaryTreeSize(node.node1) + getBinaryTreeSize(node.node2);
+    }
+
+    public static int arrayIndex = 0;
+    public static void putBSTIntoArray(BiNode node, int[] heapArray){
+        if(arrayIndex == heapArray.length)
+            return;
+        if(node == null) 
+            return;
+        putBSTIntoArray(node.node1, heapArray);
+        heapArray[arrayIndex] = node.data;
+        arrayIndex ++;
+        putBSTIntoArray(node.node2, heapArray);
+
+    }
+
+    //a function to help construct heap
+    //Pay attention to the offset here..
+    public static BiNode heapConstruct(int[] heapArray, int index){
+        if(index > heapArray.length - 1)
+            return null;
+        BiNode node = new BiNode(heapArray[index]);
+        node.node1 = heapConstruct(heapArray, 2 * index + 1);
+        node.node2 = heapConstruct(heapArray, 2 * index + 2);
+        return node;
+    }
+
+    public static BiNode toHeap(BiNode root){
+        //first to resume it to an array
+        //in order to get the array size first traverse it
+        int arraySize = getBinaryTreeSize(root);
+        int[] heapArray = new int[arraySize];
+        //in order traverser to put into heapArray
+        putBSTIntoArray(root, heapArray);
+        //reconstruct a heap(MIN heap)
+        BiNode node = heapConstruct(heapArray, 0);
+        return node;
+    }
+
     public static final void main(String[] args){
         
         //construct a binary search treee
@@ -444,7 +490,9 @@ public class BinaryTree{
         }
         
 
-        root = BinaryTree.delete(root,10);
+        //root = BinaryTree.delete(root,10);
+        //BinaryTree.printByLevel(root);
+        root = BinaryTree.toHeap(root);
         BinaryTree.printByLevel(root);
 
         
