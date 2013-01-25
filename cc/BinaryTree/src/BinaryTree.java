@@ -458,43 +458,67 @@ public class BinaryTree{
         BiNode node = heapConstruct(heapArray, 0);
         return node;
     }
+    
+
+    //expected to get a logn solution
+    public static int getKthSmallest(BiNode root, int k){
+        
+        
+        return -1;
+    }
+    
+
+    public static void getAll(BiNode root, LinkedList<Integer> list){
+        if(root == null)
+            return;
+        getAll(root.node1, list);
+        list.add(root.data);
+        getAll(root.node2, list);
+    }
+
+    public static LinkedList<Integer> getAllArrays(BiNode root){
+        LinkedList<Integer> ll = new LinkedList<Integer>();
+        getAll(root,ll);
+        return ll;
+    }
 
     public static final void main(String[] args){
         
         //construct a binary search treee
 
-        /*
-        int[] array = {1,2,3,4,5,6};
+        
+        int[] array = {1,2,3,4,5,6,7,8,9,10};
         BiNode root = BinaryTree.constructTree(array, 0, array.length - 1 );
-        BinaryTree.inOrderTraverse(root);
-        System.out.println();
-        BinaryTree.printByLevel(root);
+        //BinaryTree.inOrderTraverse(root);
+        //System.out.println();
+        //BinaryTree.printByLevel(root);
         //BiNode head = BinaryTree.convert(root);
         //BiNode traverser = head;
         //while(traverser != null){
         //   System.out.print( traverser.data + " ");
         //    traverser = traverser.node2;
         //}
-        System.out.println(BinaryTree.whetherBSTNonTraversal(root));
-        System.out.println(BinaryTree.whetherBST2(root));
+        //System.out.println(BinaryTree.whetherBSTNonTraversal(root));
+        //System.out.println(BinaryTree.whetherBST2(root));
         //System.out.println(BinaryTree.getNextForBST(root.node2.node1));
-        BinaryTree.printSumPaths(root, 6);
-        System.out.println(BinaryTree.getCommonAncester(root, 1 , 6));
-        */
+        //BinaryTree.printSumPaths(root, 6);
+        //System.out.println(BinaryTree.getCommonAncester(root, 1 , 6));
+        
 
         //test insertion and deletion
+        /*
         int [] array = {5, 1, 4, 3, 7, 10, 8, 12, 6};
         BiNode root = null;
         for(int i = 0 ; i < array.length; i ++){
             root = BinaryTree.insert( root, array[i]);
         }
-        
+        */
 
         //root = BinaryTree.delete(root,10);
         //BinaryTree.printByLevel(root);
-        root = BinaryTree.toHeap(root);
+        //root = BinaryTree.toHeap(root);
         BinaryTree.printByLevel(root);
-
+        System.out.println(BinaryTree.getAllArrays(root));
         
     }
 }
