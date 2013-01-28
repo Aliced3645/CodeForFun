@@ -79,7 +79,6 @@ public class BinaryTree{
         inOrderTraverse(root.node2);
     }
 
-       
     public static void printByLevel(BiNode root){
         if(root == null)
             return;

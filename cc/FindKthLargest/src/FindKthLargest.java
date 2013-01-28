@@ -9,6 +9,7 @@ public class FindKthLargest{
         int a2 = arr2.length - 1;
         
         //check the bounds...
+        //the k < 1 was missed
         if( (k > arr1.length + arr2.length) || k < 1)
             return Integer.MIN_VALUE;
     
@@ -25,6 +26,11 @@ public class FindKthLargest{
                 res = arr2[a2];
                 a2 --;
             }
+
+                
+            //initially, i put it in the top of the contents within WHILE,
+            //it will fail in the initial situation.
+            //the reason is res was not initialized.
 
             if( i == k){
                 return res;
@@ -55,10 +61,10 @@ public class FindKthLargest{
     
 
     public static void main(String[] args){
-        int[] arr1 = {2,4,5,6,8};   
-        int[] arr2 = {3,5,7,10,11};
+        int[] arr1 = {1,2,3,4,5};   
+        int[] arr2 = {6,7,8,9,10};
 
-        System.out.println(FindKthLargest.getKthLargest(arr1,arr2, 11));
+        System.out.println(FindKthLargest.getKthLargest(arr1,arr2, 6));
     }
 
 }
