@@ -1,0 +1,26 @@
+total 18408
+drwx--S--- 10 szhang szhang     8192 Jan 29 20:21 .
+drwx--S--- 20 szhang szhang     8192 Jan 24 19:09 ..
+drwx--S---  8 szhang szhang     8192 Jan 28 09:12 .git
+drwx--S---  4 szhang szhang     8192 Nov 27 13:03 CodePractice
+drwx--S---  6 szhang szhang     8192 Nov 28 02:29 JSLearn
+drwx--S---  4 szhang szhang     8192 Jan 15 15:30 LCS
+-rw-------  1 szhang szhang      193 Nov 27 13:03 Makefile
+-rw-------  1 szhang szhang       35 Nov 27 13:03 README
+-rw-------  1 szhang szhang      413 Nov 27 13:03 a.py
+-rw-------  1 szhang szhang      216 Jan 29 20:21 cao
+-rw-------  1 szhang szhang        0 Jan 29 20:21 cap
+drwx--S--- 55 szhang szhang     8192 Jan 28 08:34 cc
+-rw-------  1 szhang szhang      445 Nov 27 13:03 cc.c
+drwx--S---  3 szhang szhang     8192 Jan  6 17:54 cc11
+-rw-------  1 szhang szhang 17310718 Jan  6 15:43 eclim_2.2.5.jar
+-rw-------  1 szhang szhang     1457 Nov 27 13:03 ipnotes
+drwx--S---  6 szhang szhang     8192 Dec 14  2009 scapy-2.1.0
+-rw-------  1 szhang szhang   956785 Dec  5 12:22 scapy-latest.tar.gz
+-rw-------  1 szhang szhang      585 Dec  5 12:22 studyScapy.py
+-rw-------  1 szhang szhang    43534 Jan  6 16:30 supertab.vmb
+-rw-------  1 szhang szhang   348198 Dec  5 12:22 tornado-2.4.1.tar.gz
+-rw-------  1 szhang szhang      122 Nov 27 13:03 tpy.py
+-rwx------  1 szhang szhang    11959 Nov 27 13:03 udp_prototype
+-rw-------  1 szhang szhang     3940 Nov 27 13:03 udp_prototype.c
+drwx--S---  3 szhang szhang     8192 Jan  6 15:45 vim-plugins
