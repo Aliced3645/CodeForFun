@@ -21,6 +21,10 @@ class BiNode{
     }
 }
 
+class Pair{
+    int value1;
+    int value2;
+}
 
 public class BinaryTree{
 
@@ -149,6 +153,22 @@ public class BinaryTree{
     
     public static boolean whetherBST2(BiNode root){
         return whetherBST2(root, Integer.MAX_VALUE, Integer.MIN_VALUE);       
+    }
+
+    
+    public static int last = Integer.MIN_VALUE;
+    public static boolean whetherBST3(BiNode node){
+        if(node == null)
+            return true;
+        if(!whetherBST3(node.node1))
+            return false;
+        if(node.data < last)
+            return false;
+        last = node.data;
+        if(!whetherBST3(node.node2))
+            return false;
+
+        return true;
     }
 
 
@@ -480,6 +500,166 @@ public class BinaryTree{
         getAll(root,ll);
         return ll;
     }
+    
+    //O(n) and O(tree height) space consuption to find two nodes in the tree
+    //whose sum is equal to x.   
+    public static Pair findSum(BiNode root, int sum){
+        
+        //never forget to check.../
+        if(root == null){
+            return null;
+        }
+
+        else if(root != null && root.node1 == null && root.node2 == null){
+            return null;
+        }
+        
+        Pair res = new Pair();
+        //create two stacks.
+        //one is to store from the smallest,
+        //the other is to store from the biggest.
+        Stack<BiNode> stack1 = new Stack<BiNode>();
+        Stack<BiNode> stack2 = new Stack<BiNode>();
+        
+        BiNode traverser = root;
+        //special case..
+        if(root.node1 == null){
+            stack1.push(root);
+            traverser = root.node2;
+            while(traverser != null){
+                stack2.push(traverser);
+                traverser = traverser.node2;
+            }
+        }
+        else if(root.node2 == null){
+            stack2.push(root);
+            traverser = root.node1;
+            while(traverser != null){
+                stack1.push(traverser);
+                traverser = traverser . node1;
+            }
+        }
+        else{
+            while(traverser != null){
+                stack1.push(traverser);
+                traverser = traverser.node1;
+            }
+            traverser = root.node2;
+            while(traverser != null){
+                stack2.push(traverser);
+                traverser = traverser.node2;
+            }
+        }
+        
+        //now true)
+        while(true){
+            BiNode node1 = stack1.peek();
+            BiNode node2 = stack2.peek();
+            System.out.println(node1.data + " " + node2.data);
+            if(node1.data + node2.data == sum){
+                res.value1 = node1.data;
+                res.value2 = node2.data;
+                return res;
+            }
+        
+            if( node1 == root || node2 == root )
+                break;
+
+            if(node1.data + node2.data > sum){
+                //move node2 to be smaller
+                node2 = stack2.pop();
+                traverser = node2.node1;
+                if(traverser != null){
+                    stack2.push(traverser);
+                    traverser = traverser . node2;
+                    while(traverser != null){
+                        stack2.push(traverser);
+                        traverser = traverser.node2;
+                    }
+                }
+            }
+
+            else if(node1.data + node2.data < sum){
+                node1 = stack1.pop();
+                traverser = node1.node2;
+                if(traverser != null){
+                    stack1.push(traverser);
+                    traverser = traverser. node1;
+                    while(traverser != null){
+                        stack1.push(traverser);
+                        traverser = traverser.node1;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+    
+
+    //if all nodes have distinct values, use this functino to find node by
+    //value
+    public static BiNode getNode(int value, BiNode root){
+        
+        if(root == null)
+            return null;
+        BiNode res = getNode(value, root.node1);
+        if(res != null) return res;
+        if(root.data == value) return root;
+        return getNode(value, root.node2);
+    }
+
+
+    
+    //a sub problem/auxiliary function: 
+    //find the path from root to a given BiNode with specified value
+
+    public static boolean getPathtoTargetSub(BiNode node, int value, Stack<Integer> pathStack){
+        if(node == null)
+            return false;
+        //pre order traverser
+        if(node.data == value){
+            //pathStack.push(value);
+            return true;
+        }
+
+        if( getPathtoTargetSub(node.node1, value, pathStack)){
+            pathStack.push(node.node1.data);
+            return true;
+        }
+
+        else if(getPathtoTargetSub(node.node2, value, pathStack)){
+            pathStack.push(node.node2.data);
+            return true;
+        }
+        
+        return false;
+    }
+
+    public static Stack<Integer> getPathtoTarget(int target, BiNode root){
+        Stack<Integer> stack = new Stack<Integer> ();
+        getPathtoTargetSub(root, target, stack);
+        stack.push(root.data);
+        //resume to a linkedList
+        return stack;
+    }
+    
+    
+    public static BiNode findKDistanceUpperNode(BiNode node, int k, BiNode parent){
+                
+            return null;
+    }
+
+    public static LinkedList<BiNode> findKDistanceLowerNodes(BiNode node, int k){
+            return null;
+    }
+    
+    public static LinkedList<BiNode> findKDistanceNodes(BiNode node, int k){
+        
+        
+        return null;
+    }
+
 
     public static final void main(String[] args){
         
@@ -518,6 +698,19 @@ public class BinaryTree{
         //root = BinaryTree.toHeap(root);
         BinaryTree.printByLevel(root);
         System.out.println(BinaryTree.getAllArrays(root));
-        
+        /*
+        Pair p = BinaryTree.findSum(root,14);
+        if(p != null){
+            System.out.println("Pair: " + p.value1 + " " + p.value2);
+        }
+        */
+        //get the path
+        Stack<Integer> pathStack = BinaryTree.getPathtoTarget(6, root);
+        while( !pathStack.isEmpty()){
+            System.out.print(pathStack.pop() + " ");       
+        }
+
+        System.out.println(BinaryTree.whetherBST3(root));
     }
+
 }
