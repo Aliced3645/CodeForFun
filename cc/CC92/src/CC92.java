@@ -49,8 +49,10 @@ public class CC92{
             if(!whetherCollision(x+1, y)){
                 findPath(x+1, y, (LinkedList<Position>)path.clone());        
             }
-            else 
+            else{
+                path = null;
                 return;
+            }
         }
 
         if( y < YDES){
