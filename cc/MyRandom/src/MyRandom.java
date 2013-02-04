@@ -13,6 +13,9 @@ public class MyRandom{
             return;
     }
     
+    public static int[] test(){
+        return null;
+    }
     public static void shuffleArray(int[] array){
         Random random = new Random();
         for(int i = array.length; i > 0; i --){

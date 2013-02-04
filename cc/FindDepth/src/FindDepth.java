@@ -35,12 +35,10 @@ public class FindDepth{
         int levelCount = -1;
         LinkedList<Integer> leafIndices = detectLeafs(str);
         while( !leafIndices.isEmpty()){
+            int leafCounter = 0;
             for(int i : leafIndices){
-                if(i != leafIndices.getFirst())
-                    str = eliminateLeaf(str, i - 3);
-                else
-                    str = eliminateLeaf(str,i);
-                                    
+                str = eliminateLeaf(str, i - 3 * leafCounter);
+                leafCounter ++;
             }
             levelCount ++;
             System.out.println(str);

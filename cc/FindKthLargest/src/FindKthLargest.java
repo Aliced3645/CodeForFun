@@ -36,7 +36,6 @@ public class FindKthLargest{
                 return res;
             }
         
-
             i ++;
         }
 
