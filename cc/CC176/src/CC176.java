@@ -1,4 +1,4 @@
-//Given an array of integers, find indices m and n such that if you fort
+//Given an array of integers, find indices m and n such that if you sort
 //elements m through n, the entire array would be sorted. Minimize n - m.
 //
 //

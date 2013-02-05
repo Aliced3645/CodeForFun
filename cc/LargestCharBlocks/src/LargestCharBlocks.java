@@ -40,6 +40,11 @@ public class LargestCharBlocks{
                 previousChar = string[i];
             }
         }
+        //check the last!!!!!!!
+        if(tempLength > maxLength){
+            maxLength = tempLength;
+            startRecord = tempStartRecord;
+        }
         return startRecord;
     }
 

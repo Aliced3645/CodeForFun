@@ -81,6 +81,7 @@ public class CC27{
                 return false;
             slow = slow .next;
         }
+
         return true;
     }
 
@@ -95,6 +96,7 @@ public class CC27{
                 head = new Node(prev, k);
                 prev = head;
             }
+
             else{
                 String a = scanner.next();
                 char k = a.toCharArray()[0];

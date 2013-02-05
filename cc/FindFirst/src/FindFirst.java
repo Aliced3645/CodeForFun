@@ -5,7 +5,6 @@
 public class FindFirst{
     
     
-    
     public static int findFirst(int[] array, int low, int high, int target){
         if(low > high)
             return -1;

@@ -5,10 +5,11 @@ import java.util.TreeMap;
 
 
 
-
+//tree map / tree set sort the keys
+//but how about the values?
+//heap is a good option
 public class CC112{
     
-
     public static String sortStringByChar(String string){
         char[] ac = string.toCharArray();
         Arrays.sort(ac);

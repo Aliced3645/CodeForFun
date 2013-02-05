@@ -22,7 +22,7 @@ public class RemoveDupChar{
             }
         }
         for(Entry e : hash.entrySet()){
-            toReturn.insert(toReturn.length(), e.getKey());
+                toReturn.insert(toReturn.length(), e.getKey());
         }
         return toReturn.toString();
     }

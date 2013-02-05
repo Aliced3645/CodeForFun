@@ -3,9 +3,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import sun.misc.Queue;
-
-
 
 
 //the queue is like a book
@@ -23,7 +20,10 @@ public class BlockingQueue2<T>{
         //first trying to lock the queue
         queueLock.lock();
         //now acquires the control of the queue
+
         //see whether the semaphore is 0
+        //THIS MAKES THE QUEUE NOT BLOCKING!!!
+        //SO THE CLASS NAME MIGHT BE MISLEADING
         if(!occupies.tryAcquire()){
             queueLock.unlock();
             return null;
@@ -49,7 +49,6 @@ public class BlockingQueue2<T>{
         queueLock.unlock();
         return;
     }
-
 
     public static void main(String[] args){
         return;
