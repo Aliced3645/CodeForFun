@@ -1,10 +1,25 @@
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.Stack;
 
 
 enum Play{
     GOOD,BAD;
+}
+
+
+class Node{
+    public int value;
+    public Node next;
+    public Node(Node prev, int _value){
+        this.value = _value;
+        if(prev == null)
+            return;
+        prev.next = this;
+        next = null;
+        return;
+    }
 }
 
 
@@ -20,6 +35,7 @@ class BiNode{
         parent = null;
     }
 }
+
 
 class Pair{
     int value1;
@@ -660,7 +676,44 @@ public class BinaryTree{
         return null;
     }
 
+    //convert a liniked list to binary search tree which is balanced
+    public static BiNode listToBST(Node head){
 
+        if(head == null)
+            return null;
+        if( head.next == null){
+                return new BiNode(head.value);
+
+        }
+            
+        //get the mid point
+        Node slow = head;
+        Node fast = head;
+        Node slowPrev = null;
+        
+        while(fast != null && fast.next != null){
+            if(slow == head){
+                slow = slow.next;
+                slowPrev = head;
+            }
+            else{
+                slowPrev = slow;
+                slow = slow.next;
+            }
+
+            fast = fast.next.next;
+        }
+
+        //now slow is the new root, and get two sub lists
+        BiNode root = new BiNode(slow.value);
+
+        slowPrev.next = null;
+        root.node1 = listToBST(head);
+        root.node2 = listToBST(slow.next);
+        
+        return root;
+
+    }
     public static final void main(String[] args){
         
         //construct a binary search treee
@@ -668,6 +721,8 @@ public class BinaryTree{
         
         int[] array = {1,2,3,4,5,6,7,8,9,10};
         BiNode root = BinaryTree.constructTree(array, 0, array.length - 1 );
+
+
         //BinaryTree.inOrderTraverse(root);
         //System.out.println();
         //BinaryTree.printByLevel(root);
@@ -711,6 +766,25 @@ public class BinaryTree{
         }
 
         System.out.println(BinaryTree.whetherBST3(root));
+
+        //construct a linked list
+        Scanner scanner = new Scanner("1 2 3 4 5 6 7 8 9 10 11 13");
+        Node head = null;
+        Node prev = null;
+        while(scanner.hasNext()){
+            if(prev == null){
+                head = new Node(prev, scanner.nextInt());
+                prev = head;
+            }
+            else
+                prev = new Node(prev, scanner.nextInt());
+            
+        }
+
+        System.out.println();
+        //ok, I want to turn this linked list into a binary tree
+        BiNode convertedRoot = BinaryTree.listToBST(head);
+        BinaryTree.printByLevel(convertedRoot);
     }
 
 }
