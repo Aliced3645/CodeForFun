@@ -37,7 +37,11 @@ public class CC11{
             String string = scanner.nextLine();
             //System.out.println(CC11.seeDupByHash(string));
             System.out.println(CC11.seeDupNoHash(string));
- 
+            
+            int[] a = new int[5];
+            for(int i = 0; i < a.length; i ++){
+                System.out.println(a[i]);
+            }
     }
 
    

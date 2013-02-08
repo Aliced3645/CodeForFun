@@ -86,6 +86,7 @@ public class BinaryTree{
     public static void printByLevel(BiNode root){
         if(root == null)
             return;
+
         LinkedList<BiNode> traversing = new LinkedList<BiNode>();
         traversing.add(root);
         LinkedList<BiNode> toTraverse = new LinkedList<BiNode>();

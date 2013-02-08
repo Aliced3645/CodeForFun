@@ -32,14 +32,13 @@ public class BlockQueue<T>{
         return true;
     }
 
-    public void enqueue(T item) throws Exception{
+    public synchronized void enqueue(T item) throws Exception{
         lock.lock();
         if(currentSize == queueSize){
             lock.unlock();
             this.wait();
         }
         
-
         queueBuffer.addLast(item); 
         currentSize ++;
         lock.unlock();
@@ -52,7 +51,7 @@ public class BlockQueue<T>{
         return dequeue();
     }
 
-    public T dequeue() throws Exception{
+    public synchronized T dequeue() throws Exception{
         lock.lock();
         if(currentSize == 0){
             lock.unlock();
@@ -68,3 +67,5 @@ public class BlockQueue<T>{
     }
 
 }
+
+
