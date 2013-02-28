@@ -3,10 +3,10 @@
  *
  *       Filename:  cc.c
  *
- *    Description:  This is a c.c
+ *    Description:  jjjjjjjjjjjjjjj
  *
  *        Version:  1.0
- *        Created:  09/25/2012 12:58:28 AM
+ *        Created:  02/27/13 20:51:09
  *       Revision:  none
  *       Compiler:  gcc
  *
@@ -15,5 +15,9 @@
  *
  * =====================================================================================
  */
+#include <assert.h>
 
-/* Comeon */
+int main(){
+    assert(1 < 0);
+    return 0;
+}
